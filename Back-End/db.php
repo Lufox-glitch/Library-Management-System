@@ -1,6 +1,4 @@
 <?php
-<?php
-// Update these values with the ones from your InfinityFree Control Panel
 define('DB_HOST', 'lufox-pratik.gamer.gd'); // host shown in control panel
 define('DB_NAME', 'if0_40388745_librarydb'); // database name
 define('DB_USER', 'if0_40388745'); // username

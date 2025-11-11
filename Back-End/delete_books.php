@@ -1,5 +1,4 @@
 <?php
-<?php
 header('Access-Control-Allow-Origin: *');
 header('Content-Type: application/json; charset=utf-8');
 
@@ -25,3 +24,4 @@ try {
     http_response_code(500);
     echo json_encode(['error' => 'Failed to delete']);
 }
+?>
