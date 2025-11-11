@@ -1,8 +1,9 @@
 <?php
-define('DB_HOST', 'lufox-pratik.gamer.gd'); // host shown in control panel
-define('DB_NAME', 'if0_40388745_librarydb'); // database name
-define('DB_USER', 'if0_40388745'); // username
-define('DB_PASS', '5ZFtwMhi3bvH9Ow');    // password
+// Use InfinityFree MySQL host (not your site domain)
+define('DB_HOST', 'sql102.infinityfree.com'); // <- change
+define('DB_NAME', 'if0_40388745_librarydb');
+define('DB_USER', 'if0_40388745');
+define('DB_PASS', '5ZFtwMhi3bvH9Ow');
 define('DB_CHARSET', 'utf8mb4');
 
 $options = [
