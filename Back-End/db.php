@@ -1,5 +1,5 @@
 <?php
-define('DB_HOST', 'lufox-pratik.gamer.gd'); // host shown in control panel
+define('DB_HOST', 'sql102.infinityfree.com'); // host shown in control panel
 define('DB_NAME', 'if0_40388745_librarydb'); // database name
 define('DB_USER', 'if0_40388745'); // username
 define('DB_PASS', '5ZFtwMhi3bvH9Ow');    // password
@@ -18,5 +18,4 @@ try {
     http_response_code(500);
     header('Content-Type: application/json');
     echo json_encode(['error' => 'Database connection failed']);
-    exit;
-}
+    exit;}
