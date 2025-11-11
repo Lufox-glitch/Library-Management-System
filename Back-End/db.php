@@ -1,10 +1,14 @@
 <?php
-// Use InfinityFree MySQL host (not your site domain)
-define('DB_HOST', 'sql102.infinityfree.com'); // <- change
-define('DB_NAME', 'if0_40388745_librarydb');
-define('DB_USER', 'if0_40388745');
-define('DB_PASS', '5ZFtwMhi3bvH9Ow');
-define('DB_CHARSET', 'utf8mb4');
+require_once __DIR__ . '/vendor/autoload.php'; // if using dotenv
+
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+$dotenv->load();
+
+$host = $_ENV['DB_HOST'];
+$db   = $_ENV['DB_NAME'];
+$user = $_ENV['DB_USER'];
+$pass = $_ENV['DB_PASS'];
+$charset = 'utf8mb4';
 
 $options = [
     PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
@@ -12,12 +16,14 @@ $options = [
     PDO::ATTR_EMULATE_PREPARES   => false,
 ];
 
+$dsn = "mysql:host=$host;dbname=$db;charset=$charset";
+
 try {
-    $dsn = "mysql:host=".DB_HOST.";dbname=".DB_NAME.";charset=".DB_CHARSET;
-    $pdo = new PDO($dsn, DB_USER, DB_PASS, $options);
+    $pdo = new PDO($dsn, $user, $pass, $options);
 } catch (PDOException $e) {
+    error_log($e->getMessage());
     http_response_code(500);
-    header('Content-Type: application/json');
     echo json_encode(['error' => 'Database connection failed']);
     exit;
 }
+?>

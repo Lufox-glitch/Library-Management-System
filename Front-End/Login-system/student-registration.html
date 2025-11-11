@@ -221,6 +221,7 @@
             font-size: 16px;
             transition: color 0.3s ease;
             padding: 6px;
+            z-index: 10;
         }
 
         .toggle-password:hover {
@@ -411,7 +412,7 @@
                     <div class="input-wrapper">
                         <i class="fas fa-lock"></i>
                         <input type="password" id="password" name="password" required placeholder="Min 6 characters">
-                        <button type="button" class="toggle-password" onclick="togglePassword('password')">
+                        <button type="button" class="toggle-password" onclick="togglePassword('password', this)" aria-pressed="false" aria-label="Show password">
                             <i class="fas fa-eye"></i>
                         </button>
                     </div>
@@ -425,7 +426,7 @@
                     <div class="input-wrapper">
                         <i class="fas fa-lock"></i>
                         <input type="password" id="confirm_password" name="confirm_password" required placeholder="Confirm your password">
-                        <button type="button" class="toggle-password" onclick="togglePassword('confirm_password')">
+                        <button type="button" class="toggle-password" onclick="togglePassword('confirm_password', this)" aria-pressed="false" aria-label="Show password">
                             <i class="fas fa-eye"></i>
                         </button>
                     </div>
@@ -454,10 +455,18 @@
     <script>
         const API_URL = 'https://lufox-pratik.gamer.gd/Back-End';
 
-        function togglePassword(fieldId) {
+        function togglePassword(fieldId, btn) {
             const field = document.getElementById(fieldId);
-            const type = field.getAttribute('type') === 'password' ? 'text' : 'password';
-            field.setAttribute('type', type);
+            if (!field || !btn) return;
+            const icon = btn.querySelector('i');
+            const isPassword = field.type === 'password';
+            field.type = isPassword ? 'text' : 'password';
+            if (icon) {
+                icon.classList.toggle('fa-eye', !isPassword);
+                icon.classList.toggle('fa-eye-slash', isPassword);
+            }
+            btn.setAttribute('aria-pressed', isPassword ? 'true' : 'false');
+            btn.setAttribute('aria-label', isPassword ? 'Hide password' : 'Show password');
         }
 
         document.getElementById('password').addEventListener('input', function() {
