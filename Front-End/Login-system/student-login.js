@@ -1,5 +1,5 @@
 (function() {
-  const API_BASE = 'https://yourdomain.infinityfreeapp.com/backend/php'; // Update with your domain
+  const API_URL = 'https://lufox-pratik.gamer.gd/Back-End/student.php'; // Update with your domain
   const form = document.querySelector('form') || document.getElementById('loginForm');
   const emailInput = document.getElementById('email') || document.querySelector('input[type="email"]');
   const passwordInput = document.getElementById('password') || document.querySelector('input[type="password"]');
@@ -78,7 +78,7 @@
   // Remote login (via PHP API)
   async function loginRemote(email, password) {
     try {
-      const res = await fetch(`${API_BASE}/login_student.php`, {
+      const res = await fetch(`${API_URL}/login_student.php`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password })

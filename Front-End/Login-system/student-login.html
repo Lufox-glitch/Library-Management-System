@@ -159,6 +159,30 @@
       transform: translateY(-1px);
     }
 
+    .btn-register {
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 12px;
+      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
+    }
+
+    .btn-register:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+    }
+
+    .btn-register:active {
+      transform: translateY(-1px);
+    }
+
     .error {
       color: #d32f2f;
       font-size: 13px;
@@ -246,7 +270,7 @@
         font-size: 40px;
       }
 
-      .btn-login {
+      .btn-login, .btn-register {
         padding: 11px;
         font-size: 15px;
       }
@@ -260,32 +284,34 @@
 </head>
 <body>
   <div class="login-wrapper">
-   <!-- ...existing code... -->
-<div class="login-container">
-  <div class="login-icon"><i class="fas fa-user-graduate"></i></div>
-  <h1>Student Login</h1>
-  <p class="login-subtitle">Access your library account</p>
+    <div class="login-container">
+      <div class="login-header">
+        <div class="login-icon"><i class="fas fa-user-graduate"></i></div>
+        <h1>Student Login</h1>
+        <p class="login-subtitle">Access your library account</p>
+      </div>
 
-  <form id="loginForm">
-    <div class="form-group">
-      <label for="email">Email</label>
-      <input id="email" type="email" placeholder="Enter your email" required>
+      <form id="loginForm">
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input id="email" type="email" placeholder="Enter your email" required>
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input id="password" type="password" placeholder="Enter your password" required>
+        </div>
+
+        <button id="loginBtn" type="submit" class="btn-login"><i class="fas fa-sign-in-alt"></i> Login</button>
+      </form>
+
+      <button class="btn-register" onclick="window.location.href='student-registration.html'">
+        <i class="fas fa-user-plus"></i> Create New Account
+      </button>
+
+      <div id="errorMsg" class="error"></div>
+      <div id="successMsg" class="success"></div>
     </div>
-
-    <div class="form-group">
-      <label for="password">Password</label>
-      <input id="password" type="password" placeholder="Enter your password" required>
-      <button type="button" class="toggle-password"><i class="fas fa-eye"></i></button>
-    </div>
-
-    <button id="loginBtn" type="submit" class="btn-login"><i class="fas fa-sign-in-alt"></i> Login</button>
-  </form>
-
-  <div id="errorMsg" class="error"></div>
-  <div id="successMsg" class="success"></div>
-
-</div>
-<!-- ...existing code... -->
 
     <div class="nav-links">
       <a href="../../index.html">
@@ -298,16 +324,5 @@
   </div>
 
   <script src="student-login.js"></script>
-  <script>
-    // Update error/success message display
-    const errorMsg = document.getElementById("errorMsg");
-    const successMsg = document.getElementById("successMsg");
-    
-    // Override the display methods in student-login.js to use the new classes
-    if (errorMsg) {
-      errorMsg.style.display = '';
-      // The JS will handle showing/hiding
-    }
-  </script>
 </body>
 </html>
