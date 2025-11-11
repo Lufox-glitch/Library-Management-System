@@ -1,0 +1,437 @@
+  * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f5f7fa;
+      color: #333;
+    }
+
+    /* Header */
+    .student-header {
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      color: white;
+      padding: 25px 30px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .header-left {
+      flex: 1;
+      min-width: 250px;
+    }
+
+    .header-title {
+      margin: 0;
+      font-size: 26px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+
+    .header-subtitle {
+      margin: 5px 0 0 0;
+      font-size: 12px;
+      opacity: 0.9;
+      font-weight: 400;
+    }
+
+    .student-info {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .user-details {
+      text-align: right;
+      font-size: 13px;
+      min-width: 160px;
+    }
+
+    .user-name {
+      margin: 0;
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .user-email {
+      margin: 5px 0;
+      opacity: 0.9;
+      font-size: 12px;
+    }
+
+    .user-id {
+      margin: 5px 0;
+      opacity: 0.85;
+      font-size: 11px;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 4px 8px;
+      border-radius: 12px;
+      display: inline-block;
+    }
+
+    .header-buttons {
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn-header {
+      padding: 10px 16px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .btn-back {
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .btn-back:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: translateX(-2px);
+    }
+
+    .btn-logout {
+      background: rgba(139, 0, 0, 0.8);
+      color: white;
+      border: none;
+    }
+
+    .btn-logout:hover {
+      background: rgba(139, 0, 0, 1);
+      transform: translateY(-2px);
+    }
+
+    /* Main Container */
+    .dashboard-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 30px 20px;
+    }
+
+    /* Welcome Section */
+    .welcome-section {
+      background: white;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      margin-bottom: 30px;
+      border-left: 4px solid #f5576c;
+    }
+
+    .welcome-section h2 {
+      color: #333;
+      margin-bottom: 10px;
+      font-size: 20px;
+    }
+
+    .welcome-section p {
+      color: #666;
+      margin: 0;
+      font-size: 14px;
+    }
+
+    /* Search Section */
+    .search-section {
+      background: white;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      margin-bottom: 30px;
+    }
+
+    .search-section h3 {
+      color: #333;
+      margin-bottom: 20px;
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    .search-container {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .search-container input {
+      flex: 1;
+      min-width: 250px;
+      padding: 12px 14px;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 14px;
+      transition: all 0.3s ease;
+    }
+
+    .search-container input:focus {
+      outline: none;
+      border-color: #f5576c;
+      box-shadow: 0 0 8px rgba(245, 87, 108, 0.2);
+    }
+
+    .search-container button {
+      padding: 12px 24px;
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .search-container button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(245, 87, 108, 0.3);
+    }
+
+    /* Books Table */
+    .books-table-section {
+      background: white;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      margin-bottom: 30px;
+      overflow-x: auto;
+    }
+
+    .books-table-section h3 {
+      color: #333;
+      margin-bottom: 20px;
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    .table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 0;
+    }
+
+    .table thead {
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      color: white;
+    }
+
+    .table thead th {
+      padding: 14px;
+      text-align: left;
+      font-weight: 600;
+      font-size: 13px;
+      border: none;
+    }
+
+    .table tbody tr {
+      border-bottom: 1px solid #f0f0f0;
+      transition: all 0.3s ease;
+    }
+
+    .table tbody tr:hover {
+      background: #f9f9f9;
+      transform: scale(1.01);
+    }
+
+    .table tbody td {
+      padding: 14px;
+      font-size: 13px;
+      color: #555;
+    }
+
+    .table tbody td.title {
+      font-weight: 600;
+      color: #333;
+    }
+
+    .table tbody td.author {
+      color: #f5576c;
+      font-weight: 500;
+    }
+
+    .request-btn {
+      padding: 8px 14px;
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .request-btn:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(245, 87, 108, 0.3);
+    }
+
+    .request-btn:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+      opacity: 0.6;
+    }
+
+    /* Requests Section */
+    .requests-section {
+      background: white;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .requests-section h3 {
+      color: #333;
+      margin-bottom: 20px;
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    .request-item {
+      padding: 14px;
+      background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+      border-left: 4px solid #f5576c;
+      border-radius: 6px;
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13px;
+    }
+
+    .request-item-text {
+      color: #333;
+      flex: 1;
+    }
+
+    .request-item-date {
+      color: #666;
+      font-size: 11px;
+      margin-top: 4px;
+    }
+
+    .remove-request-btn {
+      padding: 6px 10px;
+      background: #d32f2f;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 11px;
+      transition: all 0.3s ease;
+      margin-left: 10px;
+    }
+
+    .remove-request-btn:hover {
+      background: #b71c1c;
+    }
+
+    .no-requests {
+      text-align: center;
+      color: #999;
+      padding: 30px;
+      font-size: 14px;
+    }
+
+    .no-results {
+      text-align: center;
+      color: #999;
+      padding: 30px;
+      font-size: 14px;
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .student-header {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .header-left {
+        width: 100%;
+      }
+
+      .student-info {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .user-details {
+        text-align: center;
+      }
+
+      .header-buttons {
+        justify-content: center;
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .dashboard-container {
+        padding: 20px 15px;
+      }
+
+      .search-container {
+        flex-direction: column;
+      }
+
+      .search-container input {
+        min-width: auto;
+      }
+
+      .table {
+        font-size: 12px;
+      }
+
+      .table thead th,
+      .table tbody td {
+        padding: 10px;
+      }
+
+      .request-btn {
+        padding: 6px 10px;
+        font-size: 11px;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .student-header {
+        padding: 15px;
+      }
+
+      .header-title {
+        font-size: 20px;
+      }
+
+      .btn-header {
+        padding: 8px 12px;
+        font-size: 12px;
+      }
+
+      .search-container button {
+        width: 100%;
+        justify-content: center;
+      }
+    }

@@ -1,0 +1,84 @@
+<!-- ...existing code... -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Library Management - Librarian Dashboard</title>
+
+  <!-- Google Font + FontAwesome -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css">
+
+  <!-- Local styles -->
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <main class="app">
+    <header class="topbar">
+      <div class="brand">
+        <div class="logo">L</div>
+        <div class="brand-text">
+          <h1>Library Management</h1>
+          <p class="muted">Librarian dashboard</p>
+        </div>
+      </div>
+
+      <div class="search-wrap">
+        <input id="searchBox" class="search" placeholder="Search books, author or serial..." />
+        <button id="searchBtn" class="btn-icon" title="Search"><i class="fas fa-search"></i></button>
+      </div>
+    </header>
+
+    <section class="content container">
+      <aside class="card insert-card">
+        <div class="card-head">
+          <h2>Add New Book</h2>
+          <p class="muted">Quickly add a book to inventory</p>
+        </div>
+
+        <form id="addForm" class="form">
+          <label>Name <input id="bookName" type="text" placeholder="Book title" required></label>
+          <label>Author <input id="authorName" type="text" placeholder="Author name" required></label>
+          <label>Publisher <input id="publisherName" type="text" placeholder="Publisher"></label>
+
+          <div class="row two">
+            <label>Pages <input id="numberPage" type="number" min="1" placeholder="e.g. 320"></label>
+            <label>Serial <input id="serialNumber" type="text" placeholder="ISBN or serial"></label>
+          </div>
+
+          <div class="actions">
+            <button id="add" type="button" class="btn primary"><i class="fas fa-plus"></i> Add Book</button>
+            <button id="clearAll" type="button" class="btn ghost"><i class="fas fa-trash"></i> Clear All</button>
+          </div>
+        </form>
+      </aside>
+
+      <section class="card list-card">
+        <div class="card-head">
+          <h2>Inventory</h2>
+          <p class="muted">Total: <span id="count">0</span></p>
+        </div>
+
+        <div class="table-wrap">
+          <table class="table" aria-describedby="Inventory">
+            <thead>
+              <tr>
+                <th>Name</th><th>Author</th><th>Publisher</th><th>Pages</th><th>Serial</th><th></th>
+              </tr>
+            </thead>
+            <tbody id="tabs">
+              <tr class="empty"><td colspan="6">No books yet. Add one using the form.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <!-- Local script -->
+   <script src="./book-data.js"></script>
+  <script src="./script.js"></script>
+</body>
+</html>
+<!-- ...existing code... -->

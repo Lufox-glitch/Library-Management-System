@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Student Dashboard</title>
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="./student-dashboard.css">
+</head>
+<body>
+  <!-- Header -->
+  <header class="student-header">
+    <div class="header-left">
+      <h2 class="header-title">📚 Student Library Portal</h2>
+      <p class="header-subtitle">Access and manage your book requests</p>
+    </div>
+    
+    <div class="student-info">
+      <div class="user-details">
+        <p class="user-name"><strong id="studentName">Student Name</strong></p>
+        <p class="user-email" id="studentEmail">email@example.com</p>
+        <p class="user-id"><i class="fas fa-id-card"></i> <span id="studentId">S001</span></p>
+      </div>
+      <div class="header-buttons">
+        <a href="../index.html" class="btn-header btn-back">
+          <i class="fas fa-arrow-left"></i> Back
+        </a>
+        <button id="logoutBtn" class="btn-header btn-logout">
+          <i class="fas fa-sign-out-alt"></i> Logout
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <div class="dashboard-container">
+    <!-- Welcome Section -->
+    <div class="welcome-section">
+      <h2>Welcome, <span id="welcomeName">Student</span>! 👋</h2>
+      <p>Search for books, check availability, and manage your library requests all in one place.</p>
+    </div>
+
+    <!-- Search Section -->
+    <div class="search-section">
+      <h3>🔍 Search Available Books</h3>
+      <div class="search-container">
+        <input 
+          type="text" 
+          id="searchInput" 
+          placeholder="Search by title, author, or publisher..." 
+        />
+        <button id="searchBtn">
+          <i class="fas fa-search"></i> Search
+        </button>
+        <button id="clearBtn" style="background: #999;">
+          <i class="fas fa-times"></i> Clear
+        </button>
+      </div>
+    </div>
+
+    <!-- Books Table -->
+    <div class="books-table-section">
+      <h3>📖 Available Books</h3>
+      <div style="overflow-x: auto;">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Title</th>
+              <th>Author</th>
+              <th>Publisher</th>
+              <th>Pages</th>
+              <th>Serial</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="booksTableBody">
+            <!-- Books load here from books-data.js -->
+          </tbody>
+        </table>
+      </div>
+      <div id="noResults" class="no-results" style="display:none;">
+        <i class="fas fa-inbox" style="font-size: 32px; color: #ccc; margin-bottom: 10px; display: block;"></i>
+        No books found matching your search.
+      </div>
+    </div>
+
+    <!-- Requests Section -->
+    <div class="requests-section">
+      <h3>📋 Your Book Requests</h3>
+      <div id="requestList">
+        <div class="no-requests">
+          <i class="fas fa-smile-wink" style="font-size: 32px; margin-bottom: 10px; display: block; color: #ccc;"></i>
+          No requests yet. Start requesting books!
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://use.fontawesome.com/releases/v5.7.2/js/all.js"></script>
+  <script src="../books-data.js"></script>
+  <script src="student-dashboard.js"></script>
+</body>
+</html>
