@@ -9,6 +9,15 @@
   <link rel="stylesheet" href="./student-dashboard.css">
 </head>
 <body>
+  <script>
+    // Check if student is logged in
+    const student = JSON.parse(localStorage.getItem('student'));
+    if (!student || !student.id) {
+      alert('Please login first');
+      window.location.href = '../Login-system/student-login.html';
+    }
+  </script>
+
   <!-- Header -->
   <header class="student-header">
     <div class="header-left">
