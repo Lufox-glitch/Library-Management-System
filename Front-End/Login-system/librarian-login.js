@@ -61,8 +61,8 @@
 
   // Mock librarian database
   const MOCK_LIBRARIANS = [
-    { id: 1, email: 'librarian@example.com', password: 'librarian123', name: 'Alice Johnson', role: 'librarian' },
-    { id: 2, email: 'admin@example.com', password: 'admin123', name: 'Bob Admin', role: 'admin' },
+    { id: 1, email: 'pratikhumagain17@gmail.com', password: 'pratik123', name: 'Pratik Humagain', role: 'librarian' },
+    { id: 2, email: 'asutoshbade123@gmail.com', password: 'asutosh123', name: 'Asutosh Bade', role: 'admin' },
     { id: 3, email: 'demo@example.com', password: 'demo123', name: 'Demo Librarian', role: 'librarian' }
   ];
 
