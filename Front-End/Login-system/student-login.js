@@ -61,8 +61,8 @@
 
   // Mock student database (for local/demo mode)
   const MOCK_STUDENTS = [
-    { id: 1, email: 'student1@example.com', password: 'password123', name: 'John Doe' },
-    { id: 2, email: 'student2@example.com', password: 'password123', name: 'Jane Smith' },
+    { id: 1, email: 'asutoshbade1@gmail.com', password: 'asutosh123', name: 'Asutosh Bade' },
+    { id: 2, email: 'pratikhumagain123@gmail.com', password: 'pratik123', name: 'Pratik Humagain' },
     { id: 3, email: 'demo@example.com', password: 'demo123', name: 'Demo Student' }
   ];
 
