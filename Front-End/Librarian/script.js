@@ -1,7 +1,6 @@
 // ...existing code...
 (function(){
   const addBtn = document.getElementById('add');
-  const clearBtn = document.getElementById('clearAll');
   const searchBtn = document.getElementById('searchBtn');
   const searchBox = document.getElementById('searchBox');
   const tabs = document.getElementById('tabs');
@@ -30,11 +29,14 @@
     tabs.innerHTML = '';
     
     if(booksArray.length === 0){
-      tabs.innerHTML = '<tr class="empty"><td colspan="5"><i class="fas fa-inbox"></i> No books found.</td></tr>';
+      tabs.innerHTML = '<tr class="empty"><td colspan="6"><i class="fas fa-inbox"></i> No books found.</td></tr>';
       return;
     }
 
-    booksArray.slice().reverse().forEach((b, idx) => {
+    // Only reverse if rendering the FULL list (not filtered)
+    const iterateArray = booksToRender ? booksArray : booksArray.slice().reverse();
+
+    iterateArray.forEach((b, idx) => {
       const actualIdx = booksToRender ? books.indexOf(b) : books.length - 1 - idx;
       const tr = document.createElement('tr');
       tr.className = 'book-row';
@@ -43,14 +45,41 @@
         <td>${escapeHtml(b.author)}</td>
         <td>${escapeHtml(b.publisher || '-')}</td>
         <td class="pages-col">${escapeHtml(b.pages || '-')}</td>
+        <td class="serial-col">${escapeHtml(b.serial || '-')}</td>
         <td class="actions-col">
-          <button data-i="${actualIdx}" class="icon-btn danger btn-delete" title="Delete this book">
-            <i class="fas fa-trash-alt"></i>
+          <button class="btn-delete" data-idx="${actualIdx}" title="Delete this book">
+            <i class="fas fa-trash-alt"></i> Remove
           </button>
         </td>
       `;
       tabs.appendChild(tr);
     });
+
+    // Add delete event listeners
+    document.querySelectorAll('.btn-delete').forEach(btn => {
+      btn.addEventListener('click', deleteBook);
+    });
+  }
+
+  // Delete book function
+  function deleteBook(e) {
+    const btn = e.currentTarget;
+    const idx = Number(btn.getAttribute('data-idx'));
+    
+    if(isNaN(idx)) return;
+    
+    if(confirm(`Delete "${books[idx].name}"?`)){
+      books.splice(idx, 1);
+      save();
+      updateCount();
+      
+      if(isSearching) {
+        searchTable();  // Re-search to update results
+      } else {
+        render();
+      }
+      showNotification('✅ Book deleted!');
+    }
   }
 
   // Add book
@@ -59,6 +88,7 @@
     const author = document.getElementById('authorName').value.trim();
     const publisher = document.getElementById('publisherName').value.trim();
     const pages = document.getElementById('numberPage').value.trim();
+    const serial = document.getElementById('serialNumber').value.trim();
 
     if(!name || !author){
       alert('⚠️ Please provide at least Book Name and Author.');
@@ -69,7 +99,8 @@
       name, 
       author, 
       publisher: publisher || '-', 
-      pages: pages || '-' 
+      pages: pages || '-',
+      serial: serial || '-'
     });
     save();
     updateCount();
@@ -80,38 +111,6 @@
     document.getElementById('bookName').focus();
     
     showNotification('✅ Book added successfully!');
-  });
-
-  // Clear all
-  clearBtn.addEventListener('click', () => {
-    if(!books.length) return;
-    if(confirm('🗑️ Are you sure you want to delete all books? This cannot be undone.')){
-      books = [];
-      save();
-      updateCount();
-      render();
-      showNotification('✅ All books cleared!');
-    }
-  });
-
-  // Delete individual book
-  tabs.addEventListener('click', (e) => {
-    const btn = e.target.closest('.btn-delete');
-    if(!btn) return;
-    const idx = Number(btn.getAttribute('data-i'));
-    if(Number.isNaN(idx)) return;
-    if(confirm('Delete this book?')){
-      books.splice(idx, 1);
-      save();
-      updateCount();
-      
-      if(isSearching) {
-        searchTable();
-      } else {
-        render();
-      }
-      showNotification('✅ Book deleted!');
-    }
   });
 
   // Search functionality
@@ -126,12 +125,12 @@
 
     isSearching = true;
     const matched = books.filter(b => {
-      const searchFields = [b.name, b.author, b.publisher, String(b.pages)].join(' ').toLowerCase();
+      const searchFields = [b.name, b.author, b.publisher, String(b.pages), String(b.serial)].join(' ').toLowerCase();
       return searchFields.includes(q);
     });
 
     if(matched.length === 0){
-      tabs.innerHTML = '<tr class="empty"><td colspan="5"><i class="fas fa-search"></i> No results for "<strong>' + escapeHtml(q) + '</strong>"</td></tr>';
+      tabs.innerHTML = '<tr class="empty"><td colspan="6"><i class="fas fa-search"></i> No results for "' + escapeHtml(q) + '"</td></tr>';
       return;
     }
 
@@ -145,17 +144,19 @@
   searchBox.addEventListener('input', () => {
     if(searchBox.value === '') {
       isSearching = false;
-      render();
+      render();  // Re-render full list (will be reversed)
     }
   });
 
   // Clear search button
   const clearSearchBtn = document.getElementById('clearSearchBtn');
   if (clearSearchBtn) {
-    clearSearchBtn.addEventListener('click', () => {
+    clearSearchBtn.addEventListener('click', (e) => {
+      e.preventDefault();
       searchBox.value = '';
       isSearching = false;
-      render();
+      render(null);
+      searchBox.focus();
     });
   }
 
@@ -171,12 +172,12 @@
   // Initialize: Load books from localStorage or BOOKS_DATABASE
   function initializeBooks() {
     if (books.length === 0 && typeof BOOKS_DATABASE !== 'undefined' && BOOKS_DATABASE.length > 0) {
-      // First time: load from BOOKS_DATABASE
       books = BOOKS_DATABASE.map(b => ({
         name: b.name || '',
         author: b.author || '',
         publisher: b.publisher || '-',
-        pages: b.pages || '-'
+        pages: b.pages || '-',
+        serial: b.serial || '-'
       }));
       save();
     }
@@ -184,12 +185,7 @@
     render();
   }
 
-  // Initialize on DOM ready
-  document.addEventListener('DOMContentLoaded', function() {
-    initializeBooks();
-  });
-
-  // Also initialize immediately if DOM is already loaded
+  // Initialize when DOM is ready
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initializeBooks);
   } else {
