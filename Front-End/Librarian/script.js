@@ -193,16 +193,20 @@
   }
 })();
 
-// Initialize books on page load
+// Replace the broken initialization code with a proper logout handler and safe DOM-ready init
 document.addEventListener('DOMContentLoaded', function() {
-  loadBooksToTable('tabs');
-  updateBookCount();
-});
-
-// Update book count
-function updateBookCount() {
-  const count = document.getElementById('count');
-  if (count) {
-    count.textContent = BOOKS_DATABASE.length;
+  const logoutBtn = document.getElementById('logoutBtn');
+  if (logoutBtn) {
+    logoutBtn.addEventListener('click', function() {
+      if (!confirm('Are you sure you want to logout?')) return;
+      // Remove any login/session flag your app uses (adjust key name if needed)
+      localStorage.removeItem('librarian_logged_in');
+      // Optionally clear other session-only data:
+      // localStorage.removeItem('currentLibrarian');
+      // Redirect to main page / login page
+      window.location.href = '../../index.html';
+    });
   }
-}
+
+  // Safe initialization already handled inside the IIFE; nothing else required here.
+});
