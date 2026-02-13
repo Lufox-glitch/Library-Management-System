@@ -103,6 +103,47 @@
       border: 1px solid rgba(255, 255, 255, 0.3);
     }
 
+    /* Catalog button — more prominent and attractive */
+    .btn-catalog {
+      background: linear-gradient(90deg, #36D1DC 0%, #5B86E5 100%);
+      color: white;
+      border: none;
+      padding: 10px 18px;
+      font-weight: 700;
+      border-radius: 10px;
+      box-shadow: 0 8px 24px rgba(91,134,229,0.18);
+      position: relative;
+      overflow: hidden;
+      transition: transform 220ms ease, box-shadow 220ms ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn-catalog i { transform: translateY(-1px); }
+
+    .btn-catalog:hover {
+      transform: translateY(-6px) scale(1.02);
+      box-shadow: 0 18px 40px rgba(91,134,229,0.25);
+    }
+
+    /* subtle animated shimmer on hover */
+    .btn-catalog::after {
+      content: '';
+      position: absolute;
+      left: -60%;
+      top: 0;
+      width: 60%;
+      height: 100%;
+      background: linear-gradient(90deg, rgba(255,255,255,0.06), rgba(255,255,255,0.18), rgba(255,255,255,0.06));
+      transform: skewX(-20deg);
+      transition: left 0.6s ease;
+      pointer-events: none;
+    }
+
+    .btn-catalog:hover::after { left: 120%; }
+
+
     .btn-back:hover {
       background: rgba(255, 255, 255, 0.3);
       transform: translateX(-2px);

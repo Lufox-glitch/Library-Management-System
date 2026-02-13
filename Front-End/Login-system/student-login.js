@@ -1,5 +1,11 @@
+/**
+ * Student Login — Local Backend (PHP)
+ * Uses http://localhost/Library-Management-System/Back-End/api
+ */
 (function() {
-  const API_BASE = 'https://yourdomain.infinityfreeapp.com/backend/php'; // Update with your domain
+  // Local API endpoint
+  const API_BASE = 'http://localhost/Library-Management-System/Back-End/api';
+
   const form = document.querySelector('form') || document.getElementById('loginForm');
   const emailInput = document.getElementById('email') || document.querySelector('input[type="email"]');
   const passwordInput = document.getElementById('password') || document.querySelector('input[type="password"]');
@@ -78,19 +84,20 @@
   // Remote login (via PHP API)
   async function loginRemote(email, password) {
     try {
-      const res = await fetch(`${API_BASE}/login_student.php`, {
+      const res = await fetch(`${API_BASE}/auth.php?action=login`, {
         method: 'POST',
+        credentials: 'include',  // important for session cookies
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password })
       });
       const data = await res.json();
-      if (res.ok && data.success) {
-        return { success: true, student: data.student };
+      if (data.success && data.user) {
+        return { success: true, student: data.user };
       }
       return { success: false, error: data.error || 'Login failed' };
     } catch (e) {
-      console.error('Remote login error:', e);
-      return { success: false, error: 'Network error. Try local mode.' };
+      console.error('Login error:', e);
+      return { success: false, error: 'Network error. Ensure backend is running.' };
     }
   }
 

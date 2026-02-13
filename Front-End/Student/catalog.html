@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Catalog — Library</title>
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css">
+  <link rel="stylesheet" href="./student-dashboard.css">
+  <link rel="stylesheet" href="./catalog.css">
+</head>
+<body>
+  <script>
+    // Ensure student is logged in (same check as student-dashboard)
+    const student = JSON.parse(localStorage.getItem('student'));
+    if (!student || !student.id) {
+      alert('Please login first');
+      window.location.href = '../Login-system/student-login.html';
+    }
+  </script>
+
+  <!-- Header (reuse existing header markup patterns) -->
+  <header class="student-header">
+    <div class="header-left">
+      <h2 class="header-title">📚 Catalog</h2>
+      <p class="header-subtitle">Browse and request books — inspired by E-Pustakalaya features</p>
+    </div>
+
+    <div class="student-info">
+      <div class="user-details">
+        <p class="user-name"><strong id="studentName">Student Name</strong></p>
+        <p class="user-email" id="studentEmail">email@example.com</p>
+      </div>
+      <div class="header-buttons">
+        <a href="../index.html" class="btn-header btn-back">
+          <i class="fas fa-arrow-left"></i> Home
+        </a>
+        <a href="student-dashboard.html" class="btn-header btn-back">
+          <i class="fas fa-chart-line"></i> Dashboard
+        </a>
+        <button id="logoutBtn" class="btn-header btn-logout">
+          <i class="fas fa-sign-out-alt"></i> Logout
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="catalog-container">
+    <section class="catalog-hero">
+      <div class="hero-banner">
+        <div class="hero-left">
+          <h1>Explore the Collection</h1>
+          <p class="hero-sub">Discover books, authors and publishers. Fast search, filters and one-click requests — inspired by E-Pustakalaya.</p>
+
+          <div class="hero-search">
+            <div class="search-box">
+              <input id="catalogSearch" type="text" placeholder="Search books by title, author, publisher...">
+              <div id="suggestions" class="suggestions" aria-hidden="true"></div>
+            </div>
+
+            <div class="filter-controls">
+              <select id="filterPublisher">
+                <option value="">All Publishers</option>
+              </select>
+              <select id="sortSelect">
+                <option value="relevance">Sort: Relevance</option>
+                <option value="title">Title A–Z</option>
+                <option value="author">Author A–Z</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="hero-stats">
+            <div class="stat">
+              <div class="stat-value" id="totalCount">0</div>
+              <div class="stat-label">Total books</div>
+            </div>
+            <div class="stat">
+              <div class="stat-value">Fast</div>
+              <div class="stat-label">Instant search</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-right" aria-hidden="true">
+          <!-- decorative illustration -->
+          <div class="hero-illustration">📚</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="filters-row">
+      <div id="chips" class="chips"></div>
+    </section>
+
+    <section class="cards-grid" id="cardsGrid">
+      <!-- Book cards rendered here -->
+    </section>
+
+    <div id="noBooks" class="no-books" style="display:none;">No books found.</div>
+  </main>
+
+  <!-- Detail modal -->
+  <div id="detailModal" class="modal" aria-hidden="true">
+    <div class="modal-content">
+      <button id="modalClose" class="modal-close"><i class="fas fa-times"></i></button>
+      <div class="modal-body">
+        <div class="cover" id="modalCover"></div>
+        <div class="meta">
+          <h2 id="modalTitle">Title</h2>
+          <p class="meta-author" id="modalAuthor">Author</p>
+          <p class="meta-publisher" id="modalPublisher">Publisher</p>
+          <p class="meta-pages" id="modalPages">Pages</p>
+          <p class="meta-serial" id="modalSerial">Serial</p>
+          <p id="modalSummary" class="modal-summary"></p>
+          <div class="modal-actions">
+            <button id="modalRequestBtn" class="btn btn-primary">Request</button>
+            <button id="modalCloseBtn" class="btn" style="margin-left:10px;">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://use.fontawesome.com/releases/v5.7.2/js/all.js"></script>
+  <script src="../Librarian/book-data.js"></script>
+  <script src="./catalog.js"></script>
+</body>
+</html>
