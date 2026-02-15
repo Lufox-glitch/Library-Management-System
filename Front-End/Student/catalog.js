@@ -1,5 +1,6 @@
 // Catalog front-end: search, suggestions, filters, cards, detail modal, request integration
 (function(){
+  const API_URL = 'http://localhost/Library-Management-System/Back-End';
   const searchInput = document.getElementById('catalogSearch');
   const suggestionsEl = document.getElementById('suggestions');
   const publisherSelect = document.getElementById('filterPublisher');
@@ -21,13 +22,34 @@
   const modalRequestBtn = document.getElementById('modalRequestBtn');
 
   const REQ_KEY = 'student_requests';
-  // Prefer the plain global BOOKS_DATABASE (declared with const in book-data.js).
-  // Top-level const/let aren't properties of window, so check typeof first.
-  let books = (typeof BOOKS_DATABASE !== 'undefined' && Array.isArray(BOOKS_DATABASE)) ? BOOKS_DATABASE.slice() : (Array.isArray(window.BOOKS_DATABASE) ? window.BOOKS_DATABASE.slice() : []);
+  // Load books from MySQL API instead of local BOOKS_DATABASE
+  let books = [];
   // Local student info (read from localStorage) to avoid depending on window.student property
   const student = JSON.parse(localStorage.getItem('student') || 'null');
   let activeChip = '';
   let currentDetailBookId = null;
+
+  // Initialize when page loads
+  document.addEventListener('DOMContentLoaded', () => {
+    loadBooksFromAPI();
+  });
+
+  // Load books from MySQL via API
+  async function loadBooksFromAPI() {
+    try {
+      const response = await fetch(`${API_URL}/api/books.php?action=list&limit=1000`);
+      const data = await response.json();
+      
+      if (data.success && data.books) {
+        books = data.books;
+        populatePublishers();
+        populateChips();
+        renderBooks();
+      }
+    } catch (error) {
+      console.error('Error loading books from API:', error);
+    }
+  }
 
   function escapeHtml(s){ if(s===null||s===undefined) return ''; return String(s).replace(/[&<>'"]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"})[m]); }
   // Generate an SVG data URL as a placeholder cover (shows initial letter and a subtle gradient)

@@ -1,4 +1,4 @@
-const API_URL = 'https://lufox-pratik.gamer.gd/Back-End';
+const API_URL = 'http://localhost/Library-Management-System/Back-End';
 
 // Load student data from localStorage
 document.addEventListener('DOMContentLoaded', function() {
@@ -24,36 +24,39 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('logoutBtn').addEventListener('click', handleLogout);
 });
 
-// Load books from API
+// Load books from MySQL API
 async function loadBooks() {
     try {
-        const response = await fetch(`${API_URL}/get_books.php`);
+        const response = await fetch(`${API_URL}/api/books.php?action=list&limit=1000`);
         const data = await response.json();
         
         if (data.success && data.books) {
             return data.books;
         }
     } catch (error) {
-        console.error('Error loading books:', error);
+        console.error('Error loading books from API:', error);
+        return [];
     }
 }
 
-function loadBooksToStudentTable() {
+async function loadBooksToStudentTable() {
   const tbody = document.getElementById('booksTableBody');
   if (!tbody) return;
   
   // Clear existing rows
-  tbody.innerHTML = '';
+  tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">Loading books...</td></tr>';
   
-  // Check if BOOKS_DATABASE is available
-  if (typeof BOOKS_DATABASE === 'undefined' || !Array.isArray(BOOKS_DATABASE)) {
-    console.warn('BOOKS_DATABASE not found');
-    document.getElementById('noResults').style.display = 'block';
+  // Load books from MySQL API
+  const books = await loadBooks();
+  
+  if (!books || books.length === 0) {
+    console.warn('No books found from API');
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">No books available</td></tr>';
     return;
   }
   
-  // Populate table with books
-  BOOKS_DATABASE.forEach(book => {
+  // Populate table with books from MySQL
+  books.forEach(book => {
     const row = document.createElement('tr');
     row.innerHTML = `
       <td>${book.name || ''}</td>
@@ -62,15 +65,13 @@ function loadBooksToStudentTable() {
       <td>${book.pages || ''}</td>
       <td>${book.serial || ''}</td>
       <td>
-        <button class="request-btn" onclick="requestBook(${book.serial})">
+        <button class="request-btn" onclick="requestBook(${book.id})">
           <i class="fas fa-plus"></i> Request
         </button>
       </td>
     `;
     tbody.appendChild(row);
   });
-  
-  document.getElementById('noResults').style.display = 'none';
 }
 
 function displayBooks(books) {

@@ -1,16 +1,39 @@
 // ...existing code...
 (function(){
+  const API_URL = 'http://localhost/Library-Management-System/Back-End';
   const addBtn = document.getElementById('add');
   const searchBtn = document.getElementById('searchBtn');
   const searchBox = document.getElementById('searchBox');
   const tabs = document.getElementById('tabs');
   const countEl = document.getElementById('count');
 
-  let books = JSON.parse(localStorage.getItem('librarian_books') || '[]');
+  let books = [];
   let isSearching = false;
 
+  // Load books from MySQL API on page load
+  document.addEventListener('DOMContentLoaded', () => {
+    loadBooksFromAPI();
+  });
+
+  // Load books from MySQL via API
+  async function loadBooksFromAPI() {
+    try {
+      const response = await fetch(`${API_URL}/api/books.php?action=list&limit=1000`);
+      const data = await response.json();
+      
+      if (data.success && data.books) {
+        books = data.books;
+        updateCount();
+        render();
+      }
+    } catch (error) {
+      console.error('Error loading books from API:', error);
+    }
+  }
+
   function save(){ 
-    localStorage.setItem('librarian_books', JSON.stringify(books)); 
+    // Books are saved in MySQL, not localStorage
+    console.log('Books are synced with MySQL database');
   }
 
   function updateCount(){ 
