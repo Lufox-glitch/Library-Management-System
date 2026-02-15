@@ -4,6 +4,7 @@
  */
 
 require_once '../includes/config.php';
+require_once '../queries.php';
 
 $action = $_GET['action'] ?? '';
 $method = $_SERVER['REQUEST_METHOD'];
@@ -14,65 +15,45 @@ if ($action === 'list' && $method === 'GET') {
     $limit = intval($_GET['limit'] ?? 20);
     $offset = intval($_GET['offset'] ?? 0);
 
-    $conn = getDBConnection();
-
-    // Build query
-    $where = [];
-    $params = [];
-    $types = '';
+    $books = [];
+    $total = 0;
 
     if ($search) {
+        $books = searchBooks($search, $limit, $offset);
+        // Count total for search
+        $conn = getDBConnection();
         $search_param = '%' . $search . '%';
-        $where[] = '(name LIKE ? OR author LIKE ? OR publisher LIKE ?)';
-        $params[] = $search_param;
-        $params[] = $search_param;
-        $params[] = $search_param;
-        $types .= 'sss';
-    }
-
-    if ($category) {
-        $where[] = 'category = ?';
-        $params[] = $category;
-        $types .= 's';
-    }
-
-    $where_clause = !empty($where) ? 'WHERE ' . implode(' AND ', $where) : '';
-
-    // Get total count
-    $count_sql = "SELECT COUNT(*) as total FROM books $where_clause";
-    if (!empty($params)) {
-        $count_stmt = $conn->prepare($count_sql);
-        $count_stmt->bind_param($types, ...$params);
+        $count_stmt = $conn->prepare('SELECT COUNT(*) as total FROM books WHERE (name LIKE ? OR author LIKE ? OR publisher LIKE ?)');
+        $count_stmt->bind_param('sss', $search_param, $search_param, $search_param);
         $count_stmt->execute();
         $count_result = $count_stmt->get_result()->fetch_assoc();
         $count_stmt->close();
+        $conn->close();
+        $total = $count_result['total'];
+    } elseif ($category) {
+        $books = getBooksByCategory($category, $limit, $offset);
+        // Count total for category
+        $conn = getDBConnection();
+        $count_stmt = $conn->prepare('SELECT COUNT(*) as total FROM books WHERE category = ?');
+        $count_stmt->bind_param('s', $category);
+        $count_stmt->execute();
+        $count_result = $count_stmt->get_result()->fetch_assoc();
+        $count_stmt->close();
+        $conn->close();
+        $total = $count_result['total'];
     } else {
-        $count_result = $conn->query($count_sql)->fetch_assoc();
+        $books = getAllBooks($limit, $offset);
+        // Count total books
+        $conn = getDBConnection();
+        $count_result = $conn->query('SELECT COUNT(*) as total FROM books')->fetch_assoc();
+        $conn->close();
+        $total = $count_result['total'];
     }
-
-    // Get books
-    $sql = "SELECT id, name, author, publisher, pages, serial, category, summary, available_copies FROM books $where_clause ORDER BY name ASC LIMIT ? OFFSET ?";
-    $params[] = $limit;
-    $params[] = $offset;
-    $types .= 'ii';
-
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param($types, ...$params);
-    $stmt->execute();
-    $result = $stmt->get_result();
-
-    $books = [];
-    while ($row = $result->fetch_assoc()) {
-        $books[] = $row;
-    }
-
-    $stmt->close();
-    $conn->close();
 
     sendJSON([
         'success' => true,
         'books' => $books,
-        'total' => $count_result['total'],
+        'total' => $total,
         'offset' => $offset,
         'limit' => $limit
     ]);
@@ -84,19 +65,11 @@ if ($action === 'list' && $method === 'GET') {
         sendJSON(['error' => 'Book ID required'], 400);
     }
 
-    $conn = getDBConnection();
-    $stmt = $conn->prepare('SELECT id, name, author, publisher, pages, serial, isbn, category, summary, total_copies, available_copies FROM books WHERE id = ?');
-    $stmt->bind_param('i', $book_id);
-    $stmt->execute();
-    $result = $stmt->get_result();
+    $book = getBookById($book_id);
 
-    if ($result->num_rows === 0) {
+    if (!$book) {
         sendJSON(['error' => 'Book not found'], 404);
     }
-
-    $book = $result->fetch_assoc();
-    $stmt->close();
-    $conn->close();
 
     sendJSON([
         'success' => true,

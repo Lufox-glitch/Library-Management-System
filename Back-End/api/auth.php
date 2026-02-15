@@ -4,6 +4,7 @@
  */
 
 require_once '../includes/config.php';
+require_once '../queries.php';
 
 $action = $_GET['action'] ?? '';
 $method = $_SERVER['REQUEST_METHOD'];
@@ -17,17 +18,12 @@ if ($action === 'login' && $method === 'POST') {
         sendJSON(['error' => 'Email and password required'], 400);
     }
 
-    $conn = getDBConnection();
-    $stmt = $conn->prepare('SELECT id, name, email, password, role FROM users WHERE email = ?');
-    $stmt->bind_param('s', $email);
-    $stmt->execute();
-    $result = $stmt->get_result();
-
-    if ($result->num_rows === 0) {
+    $user = getUserByEmail($email);
+    
+    if (!$user) {
         sendJSON(['error' => 'Invalid email or password'], 401);
     }
 
-    $user = $result->fetch_assoc();
     if (!verifyPassword($password, $user['password'])) {
         sendJSON(['error' => 'Invalid email or password'], 401);
     }
@@ -37,9 +33,6 @@ if ($action === 'login' && $method === 'POST') {
     $_SESSION['user_name'] = $user['name'];
     $_SESSION['user_email'] = $user['email'];
     $_SESSION['user_role'] = $user['role'];
-
-    $stmt->close();
-    $conn->close();
 
     sendJSON([
         'success' => true,
@@ -67,38 +60,27 @@ if ($action === 'login' && $method === 'POST') {
         sendJSON(['error' => 'Password must be at least 6 characters'], 400);
     }
 
-    $conn = getDBConnection();
-    $hashed_pw = hashPassword($password);
+    $user_id = createUser($name, $email, $password, $role);
 
-    $stmt = $conn->prepare('INSERT INTO users (name, email, password, role) VALUES (?, ?, ?, ?)');
-    $stmt->bind_param('ssss', $name, $email, $hashed_pw, $role);
-
-    if ($stmt->execute()) {
-        $user_id = $conn->insert_id;
-        $_SESSION['user_id'] = $user_id;
-        $_SESSION['user_name'] = $name;
-        $_SESSION['user_email'] = $email;
-        $_SESSION['user_role'] = $role;
-
-        $stmt->close();
-        $conn->close();
-
-        sendJSON([
-            'success' => true,
-            'message' => 'Registration successful',
-            'user' => [
-                'id' => $user_id,
-                'name' => $name,
-                'email' => $email,
-                'role' => $role
-            ]
-        ]);
-    } else {
-        if (strpos($stmt->error, 'Duplicate') !== false) {
-            sendJSON(['error' => 'Email already registered'], 400);
-        }
-        sendJSON(['error' => 'Registration failed: ' . $stmt->error], 500);
+    if ($user_id === false) {
+        sendJSON(['error' => 'Email already registered or registration failed'], 400);
     }
+
+    $_SESSION['user_id'] = $user_id;
+    $_SESSION['user_name'] = $name;
+    $_SESSION['user_email'] = $email;
+    $_SESSION['user_role'] = $role;
+
+    sendJSON([
+        'success' => true,
+        'message' => 'Registration successful',
+        'user' => [
+            'id' => $user_id,
+            'name' => $name,
+            'email' => $email,
+            'role' => $role
+        ]
+    ]);
 
 } elseif ($action === 'logout') {
     session_destroy();
