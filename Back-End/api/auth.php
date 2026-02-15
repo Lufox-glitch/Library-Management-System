@@ -11,7 +11,7 @@ $method = $_SERVER['REQUEST_METHOD'];
 
 if ($action === 'login' && $method === 'POST') {
     $input = json_decode(file_get_contents('php://input'), true);
-    $email = sanitize($input['email'] ?? '');
+    $email = trim($input['email'] ?? '');
     $password = $input['password'] ?? '';
 
     if (!$email || !$password) {
@@ -48,7 +48,7 @@ if ($action === 'login' && $method === 'POST') {
 } elseif ($action === 'register' && $method === 'POST') {
     $input = json_decode(file_get_contents('php://input'), true);
     $name = sanitize($input['name'] ?? '');
-    $email = sanitize($input['email'] ?? '');
+    $email = trim($input['email'] ?? '');
     $password = $input['password'] ?? '';
     $role = $input['role'] ?? 'student';
 
