@@ -17,11 +17,29 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Load books to table
     loadBooksToStudentTable();
+    
+    // Load student requests from API
+    loadStudentRequests();
 
     // Event listeners
     document.getElementById('searchBtn').addEventListener('click', handleSearch);
     document.getElementById('clearBtn').addEventListener('click', clearSearch);
     document.getElementById('logoutBtn').addEventListener('click', handleLogout);
+    
+    // Toggle requests section
+    const requestToggleBtn = document.getElementById('requestToggleBtn');
+    if (requestToggleBtn) {
+        requestToggleBtn.addEventListener('click', function() {
+            const section = document.querySelector('.requests-section');
+            if (section) {
+                const isHidden = section.style.display === 'none';
+                section.style.display = isHidden ? 'block' : 'none';
+                if (isHidden) {
+                    section.scrollIntoView({ behavior: 'smooth' });
+                }
+            }
+        });
+    }
 });
 
 // Load books from MySQL API
@@ -36,6 +54,66 @@ async function loadBooks() {
     } catch (error) {
         console.error('Error loading books from API:', error);
         return [];
+    }
+}
+
+// Load student's book requests from API
+async function loadStudentRequests() {
+    try {
+        const response = await fetch(`${API_URL}/api/requests.php?action=list`, {
+            credentials: 'include'
+        });
+        const data = await response.json();
+        
+        if (data.success && data.requests) {
+            displayStudentRequests(data.requests);
+        }
+    } catch (error) {
+        console.error('Error loading requests:', error);
+    }
+}
+
+// Display student requests
+function displayStudentRequests(requests) {
+    const requestList = document.querySelector('.requests-section');
+    if (!requestList) return;
+    
+    if (!requests || requests.length === 0) {
+        requestList.innerHTML = '<div class="no-requests">No book requests yet. Start requesting books!</div>';
+        return;
+    }
+    
+    let html = '<div class="request-items">';
+    requests.forEach(req => {
+        html += `
+            <div class="request-item" style="padding:12px;border:1px solid #eee;margin-bottom:8px;border-radius:6px;display:flex;justify-content:space-between;align-items:center;">
+                <div style="flex:1">
+                    <strong>${req.book_name || '-'}</strong>
+                    <div style="color:#666;font-size:0.9em">${req.author || '-'}</div>
+                    <div style="color:#888;font-size:0.8em">Status: <span style="font-weight:bold;color:${req.status === 'pending' ? '#ff6b6b' : '#51cf66'}">${req.status}</span></div>
+                    ${req.due_date ? `<div style="color:#888;font-size:0.8em">Due: ${new Date(req.due_date).toLocaleDateString()}</div>` : ''}
+                </div>
+                <div style="margin-left:12px">
+                    ${req.status === 'pending' ? `<button class="btn-cancel" data-request-id="${req.id}" style="background:#f2f2f2;border:1px solid #ddd;padding:6px 10px;border-radius:4px;cursor:pointer;">Cancel</button>` : '<button disabled style="background:#f2f2f2;border:1px solid #ddd;padding:6px 10px;border-radius:4px;color:#999;">Approved</button>'}
+                </div>
+            </div>
+        `;
+    });
+    html += '</div>';
+    requestList.innerHTML = html;
+    
+    // Attach cancel handlers
+    document.querySelectorAll('.btn-cancel').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const requestId = this.getAttribute('data-request-id');
+            cancelStudentRequest(requestId);
+        });
+    });
+    
+    // Update request count
+    const requestCount = document.getElementById('requestCount');
+    if (requestCount) {
+        requestCount.textContent = requests.length;
     }
 }
 
@@ -124,14 +202,67 @@ function clearSearch() {
 }
 
 function requestBook(bookId) {
-    alert('Book request feature coming soon!');
-    // TODO: implement book request API call
+    const student = JSON.parse(localStorage.getItem('student'));
+    
+    if (!student || !student.id) {
+        alert('Please login first');
+        return;
+    }
+
+    // Call API to request book
+    fetch(`${API_URL}/api/requests.php?action=create`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ book_id: bookId })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('✅ Book requested successfully!');
+            loadBooksToStudentTable(); // Reload to show updated status
+            loadStudentRequests(); // Load requests
+        } else {
+            alert('❌ ' + (data.error || 'Failed to request book'));
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('❌ Error requesting book');
+    });
 }
 
 function handleLogout() {
     localStorage.removeItem('student');
     alert('Logged out successfully');
     window.location.href = '../Login-system/student-login.html';
+}
+
+// Cancel a book request
+function cancelStudentRequest(requestId) {
+    if (!confirm('Are you sure you want to cancel this request?')) {
+        return;
+    }
+    
+    fetch(`${API_URL}/api/requests.php?action=cancel`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ request_id: requestId })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('✅ Request cancelled successfully');
+            loadStudentRequests(); // Reload requests
+        } else {
+            alert('❌ ' + (data.error || 'Failed to cancel request'));
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('❌ Error cancelling request');
+    });
 }
 
 (function () {
