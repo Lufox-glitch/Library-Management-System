@@ -1,13 +1,4 @@
 <?php
-/**
- * Database Configuration
- * Local setup for XAMPP/LAMP development
- * 
- * For XAMPP on Windows: Usually works with root/empty password
- * For XAMPP on Mac: Same as Windows
- * For LAMP on Linux: May need to set a password or use different user
- */
-
 // Database credentials
 define('DB_HOST', 'localhost');          // localhost for local development
 define('DB_USER', 'root');               // XAMPP default user
