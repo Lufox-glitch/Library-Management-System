@@ -1,5 +1,11 @@
+/**
+ * Librarian Login — Local Backend (PHP)
+ * Uses http://localhost/Library-Management-System/Back-End/api
+ */
 (function() {
-  const API_BASE = 'https://yourdomain.infinityfreeapp.com/backend/php';
+  // Local API endpoint
+  const API_BASE = 'http://localhost/Library-Management-System/Back-End/api';
+
   const form = document.getElementById('loginForm');
   const emailInput = document.getElementById('email');
   const passwordInput = document.getElementById('password');
@@ -59,38 +65,23 @@
     return true;
   }
 
-  // Mock librarian database
-  const MOCK_LIBRARIANS = [
-    { id: 1, email: 'pratikhumagain17@gmail.com', password: 'pratik123', name: 'Pratik Humagain', role: 'librarian' },
-    { id: 2, email: 'asutoshbade123@gmail.com', password: 'asutosh123', name: 'Asutosh Bade', role: 'admin' },
-    { id: 3, email: 'demo@example.com', password: 'demo123', name: 'Demo Librarian', role: 'librarian' }
-  ];
-
-  // Local login
-  function loginLocal(email, password) {
-    const librarian = MOCK_LIBRARIANS.find(l => l.email === email && l.password === password);
-    if (librarian) {
-      return { success: true, librarian };
-    }
-    return { success: false, error: 'Invalid email or password' };
-  }
-
-  // Remote login
+  // Remote login via backend API
   async function loginRemote(email, password) {
     try {
-      const res = await fetch(API_BASE + '/login_librarian.php', {
+      const res = await fetch(`${API_BASE}/auth.php?action=login`, {
         method: 'POST',
+        credentials: 'include',  // important for session cookies
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password })
       });
       const data = await res.json();
-      if (res.ok && data.success) {
-        return { success: true, librarian: data.librarian };
+      if (data.success && data.user) {
+        return { success: true, librarian: data.user };
       }
       return { success: false, error: data.error || 'Login failed' };
     } catch (e) {
-      console.error('Remote login error:', e);
-      return { success: false, error: 'Network error. Try local mode.' };
+      console.error('Login error:', e);
+      return { success: false, error: 'Network error. Ensure backend is running.' };
     }
   }
 
@@ -109,15 +100,14 @@
       return;
     }
 
-    // Try remote login first, fall back to local
-    let result = await loginRemote(email, password);
-    if (!result.success) {
-      result = loginLocal(email, password);
-    }
+    // Try backend login
+    const result = await loginRemote(email, password);
 
     if (result.success) {
       showSuccess('Welcome, ' + result.librarian.name + '!');
+      // Store librarian data in localStorage
       localStorage.setItem('librarian', JSON.stringify(result.librarian));
+      // Redirect to librarian dashboard
       setTimeout(() => {
         window.location.href = '../Librarian/Librarian-dashboard.html';
       }, 1500);
