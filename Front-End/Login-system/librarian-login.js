@@ -1,5 +1,5 @@
 (function() {
-  const API_BASE = 'https://yourdomain.infinityfreeapp.com/backend/php'; // Update with your domain
+  const API_BASE = 'https://yourdomain.infinityfreeapp.com/backend/php';
   const form = document.getElementById('loginForm');
   const emailInput = document.getElementById('email');
   const passwordInput = document.getElementById('password');
@@ -78,7 +78,7 @@
   // Remote login
   async function loginRemote(email, password) {
     try {
-      const res = await fetch(`${API_BASE}/login_librarian.php`, {
+      const res = await fetch(API_BASE + '/login_librarian.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password })
@@ -116,10 +116,8 @@
     }
 
     if (result.success) {
-      showSuccess(`Welcome, ${result.librarian.name}!`);
-      // Store librarian data in localStorage
+      showSuccess('Welcome, ' + result.librarian.name + '!');
       localStorage.setItem('librarian', JSON.stringify(result.librarian));
-      // Redirect to librarian dashboard
       setTimeout(() => {
         window.location.href = '../Librarian/Librarian-dashboard.html';
       }, 1500);
@@ -138,14 +136,18 @@
     if (e.key === 'Enter') form.dispatchEvent(new Event('submit'));
   });
 
-  // Toggle password visibility
-  const togglePasswordBtn = document.getElementById('togglePassword');
-  if (togglePasswordBtn) {
-    togglePasswordBtn.addEventListener('click', (e) => {
+  // Password toggle functionality
+  const toggleBtn = document.getElementById('togglePassword');
+  if (toggleBtn) {
+    toggleBtn.addEventListener('click', function(e) {
       e.preventDefault();
-      const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-      passwordInput.setAttribute('type', type);
-      togglePasswordBtn.textContent = type === 'password' ? '👁️' : '🙈';
+      if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        toggleBtn.textContent = '🙈';
+      } else {
+        passwordInput.type = 'password';
+        toggleBtn.textContent = '👁️';
+      }
     });
   }
 });
