@@ -453,7 +453,7 @@
     </div>
 
     <script>
-        const API_URL = 'https://lufox-pratik.gamer.gd/Back-End';
+        const API_URL = 'http://localhost/Library-Management-System/Back-End/api';
 
         function togglePassword(fieldId, btn) {
             const field = document.getElementById(fieldId);
@@ -532,7 +532,7 @@
                 loadingEl.style.display = 'block';
                 submitBtn.disabled = true;
 
-                const response = await fetch(`${API_URL}/register.php`, {
+                const response = await fetch(`${API_URL}/auth.php?action=register`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -541,7 +541,7 @@
                         name,
                         email,
                         password,
-                        confirm_password
+                        role: 'student'
                     })
                 });
 
