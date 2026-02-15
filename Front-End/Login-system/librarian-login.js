@@ -139,14 +139,13 @@
   });
 
   // Toggle password visibility
-  const togglePasswordBtn = document.querySelector('.toggle-password');
+  const togglePasswordBtn = document.getElementById('togglePassword');
   if (togglePasswordBtn) {
-    togglePasswordBtn.addEventListener('click', () => {
-      const type = passwordInput.type === 'password' ? 'text' : 'password';
-      passwordInput.type = type;
-      togglePasswordBtn.innerHTML = type === 'password' 
-        ? '<i class="fas fa-eye"></i>' 
-        : '<i class="fas fa-eye-slash"></i>';
+    togglePasswordBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+      passwordInput.setAttribute('type', type);
+      togglePasswordBtn.textContent = type === 'password' ? '👁️' : '🙈';
     });
   }
-})();
+});

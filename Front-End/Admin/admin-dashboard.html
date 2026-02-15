@@ -145,6 +145,34 @@
             margin-bottom: 15px;
         }
 
+        .password-field-wrapper {
+            position: relative;
+        }
+
+        .password-field-wrapper .toggle-password-btn {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+            color: #667eea;
+            padding: 5px;
+            z-index: 10;
+            transition: all 0.3s ease;
+        }
+
+        .password-field-wrapper .toggle-password-btn:hover {
+            color: #764ba2;
+            transform: translateY(-50%) scale(1.15);
+        }
+
+        .password-field-wrapper .toggle-password-btn:active {
+            transform: translateY(-50%) scale(0.95);
+        }
+
         label {
             display: block;
             margin-bottom: 5px;
@@ -419,7 +447,10 @@
                         </div>
                         <div class="form-group">
                             <label for="libPassword">Password</label>
-                            <input type="password" id="libPassword" placeholder="Enter password (min 6 characters)" required minlength="6">
+                            <div class="password-field-wrapper">
+                                <input type="password" id="libPassword" placeholder="Enter password (min 6 characters)" required minlength="6">
+                                <button type="button" class="toggle-password-btn" id="toggleLibPassword" title="Show/Hide password">👁️</button>
+                            </div>
                         </div>
                         <button type="submit">Create Librarian</button>
                     </form>
@@ -776,6 +807,21 @@
                 window.location.href = 'admin-login.html';
             }
         }
+
+        // Password visibility toggle for librarian creation
+        document.addEventListener('DOMContentLoaded', function() {
+            const toggleBtn = document.getElementById('toggleLibPassword');
+            const passwordInput = document.getElementById('libPassword');
+            
+            if (toggleBtn && passwordInput) {
+                toggleBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                    passwordInput.setAttribute('type', type);
+                    toggleBtn.textContent = type === 'password' ? '👁️' : '🙈';
+                });
+            }
+        });
     </script>
 </body>
 </html>
